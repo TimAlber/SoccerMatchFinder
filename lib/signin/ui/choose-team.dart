@@ -43,6 +43,63 @@ class _ChooseTeamState extends State<ChooseTeam> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => _addNewTeamPopupDialog(context),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _addNewTeamPopupDialog(BuildContext context) {
+    final newTeamNameTextFieldController = TextEditingController();
+    final newTeamPwTextFieldController = TextEditingController();
+    return AlertDialog(
+      title: const Text('Neues Team anlegen:'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+              controller: newTeamNameTextFieldController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Name des neuen Teams',
+              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: TextField(
+              controller: newTeamPwTextFieldController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Passwort',
+              ),
+            ),
+          ),
+          Text(
+            style: TextStyle(color: Colors.black.withOpacity(0.6), fontSize: 10),
+            'Das passwort kannst du deinen Team Mitgliedern sagen. Es dient dazu das nicht jeder in dein Team gehen kann.',
+          )
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Abbrechen'),
+        ),
+        TextButton(
+          onPressed: () async {
+          },
+          child: const Text('Anlegen'),
+        )
+      ],
     );
   }
 }
