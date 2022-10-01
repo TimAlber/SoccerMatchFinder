@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "763168808348",
+    "project_id": "findsoccermatchesapp",
+    "storage_bucket": "findsoccermatchesapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763168808348:android:1b2582d61a40b37c387c59",
+        "android_client_info": {
+          "package_name": "tim.soccer.finder.soccer_finder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763168808348-t7mhkut946gfbc3serduqkin9rgv0c9q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLZO8gLOxh9W_mflrffrN2w-BGEpZMD6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763168808348-t7mhkut946gfbc3serduqkin9rgv0c9q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "763168808348-u0u0fs4svmto3pfqrnshj54kbq9ai75b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "tim.soccer.finder.soccerFinder"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
