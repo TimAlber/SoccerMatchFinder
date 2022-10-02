@@ -1,7 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
+import 'package:soccer_finder/models.dart';
 
 class AuthService {
+  String? getSignedInUserID(){
+    final user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      return user.uid;
+    } else {
+      return null;
+    }
+  }
+
   Future<bool> signIn({
     required String email,
     required String pw,
@@ -40,5 +51,48 @@ class AuthService {
       return false;
     }
     return false;
+  }
+
+  Future<Team?> addNewTeam({
+    required String name,
+    required String pw,
+  }) async {
+    try{
+      final team = Team(
+        name: name,
+        pw: pw,
+        points: 0,
+        linkToPicture: '',
+      );
+
+      final teamsRef = FirebaseFirestore.instance.collection('teams').withConverter<Team>(
+        fromFirestore: (snapshot, _) => Team.fromJson(snapshot.data()!),
+        toFirestore: (team, _) => team.toJson(),
+      );
+
+      final one = await teamsRef.add(team);
+      team.id = one.id;
+      await teamsRef.doc(team.id).set(team);
+      return team;
+    } catch (e){
+      Logger().e(e);
+      return null;
+    }
+  }
+
+  Future<bool> addUserToTeam({
+    required String userId,
+    required String teamId,
+  }) async {
+    try{
+      final playersData = {
+        "usedID": userId,
+      };
+      await FirebaseFirestore.instance.collection('teams').doc(teamId).collection('players').add(playersData);
+      return true;
+    } catch (e) {
+      Logger().e(e);
+      return true;
+    }
   }
 }

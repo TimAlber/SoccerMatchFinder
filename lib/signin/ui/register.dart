@@ -22,9 +22,6 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registriere dich'),
-      ),
       body: !isloading ? Center(
         child: Form(
           key: _formKey,

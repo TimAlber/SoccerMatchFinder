@@ -18,9 +18,6 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log dich ein oder Registriere dich'),
-      ),
       body: Center(
         child: Form(
           key: _formKey,

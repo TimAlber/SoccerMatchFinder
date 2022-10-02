@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:soccer_finder/home/home-page.dart';
 import 'package:soccer_finder/models.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:soccer_finder/signin/buisness-logic/service.dart';
 
 class ChooseTeam extends StatefulWidget {
   const ChooseTeam({Key? key}) : super(key: key);
@@ -27,19 +30,27 @@ class _ChooseTeamState extends State<ChooseTeam> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Wähle dein Team oder füge eins Hinzu'),
-      ),
       body: FirestoreListView<Team>(
         query: teamsQuery,
         itemBuilder: (context, snapshot) {
-          // Data is now typed!
           Team team = snapshot.data();
-
-          //return Text(team.name);
-          return ListTile(
-            title: Text(team.name),
-            subtitle: Text(team.points.toString()),
+          return Column(
+            children: [
+              ListTile(
+                title: Text(team.name),
+                subtitle: Text(team.points.toString()),
+                trailing: const Icon(Icons.arrow_forward),
+                onTap: () async {
+                  final worked = await AuthService().addUserToTeam(userId: AuthService().getSignedInUserID()!, teamId: team.id!);
+                  if(worked){
+                    openHomePage();
+                  } else {
+                    Logger().e('Cant join team');
+                  }
+                },
+              ),
+              const Divider(),
+            ],
           );
         },
       ),
@@ -96,10 +107,32 @@ class _ChooseTeamState extends State<ChooseTeam> {
         ),
         TextButton(
           onPressed: () async {
+            final newTeam = await AuthService().addNewTeam(name: newTeamNameTextFieldController.text, pw: newTeamPwTextFieldController.text);
+            if(newTeam == null) {
+              // handle error
+              Logger().e('Cant create team');
+            } else {
+              final worked = await AuthService().addUserToTeam(userId: AuthService().getSignedInUserID()!, teamId: newTeam.id!);
+              if(worked){
+                openHomePage();
+              } else {
+                // handle error
+                Logger().e('Cant join team');
+              }
+            }
           },
           child: const Text('Anlegen'),
         )
       ],
+    );
+  }
+
+  void openHomePage(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+          const HomePage()),
     );
   }
 }
