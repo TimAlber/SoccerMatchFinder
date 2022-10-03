@@ -36,6 +36,7 @@ class _MyAppState extends State<MyApp> {
         });
       } else {
         print('User is currently signed in!');
+        print('user: ${user.displayName!}');
         setState(() {
           home = const HomePage();
         });
