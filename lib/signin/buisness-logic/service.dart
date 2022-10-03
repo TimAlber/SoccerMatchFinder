@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_finder/models.dart';
 
 class AuthService {
@@ -73,6 +74,10 @@ class AuthService {
       final one = await teamsRef.add(team);
       team.id = one.id;
       await teamsRef.doc(team.id).set(team);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('teamId', team.id!);
+
       return team;
     } catch (e){
       Logger().e(e);
@@ -89,6 +94,8 @@ class AuthService {
         "usedID": userId,
       };
       await FirebaseFirestore.instance.collection('teams').doc(teamId).collection('players').add(playersData);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('teamId', teamId);
       return true;
     } catch (e) {
       Logger().e(e);

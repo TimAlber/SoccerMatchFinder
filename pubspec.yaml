@@ -43,6 +43,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   logger: ^1.1.0
   flutterfire_ui: ^0.4.3+11
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:

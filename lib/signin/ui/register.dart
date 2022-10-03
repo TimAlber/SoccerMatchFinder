@@ -96,6 +96,9 @@ class _RegisterState extends State<Register> {
                             minimumSize:
                             MaterialStateProperty.all(const Size(200, 100))),
                         onPressed: () {
+                          setState(() {
+                            isloading = true;
+                          });
                           if (_formKey.currentState!.validate()) {
                             AuthService().register(email: emailTextController.text, pw: pwTextController.text, username: userNameTextController.text).then((worked) => {
                               AuthService().signIn(email: emailTextController.text, pw: pwTextController.text).then((innerWorked) => {
@@ -112,6 +115,9 @@ class _RegisterState extends State<Register> {
                               })
                             });
                         }
+                          setState(() {
+                            isloading = false;
+                          });
                         },
                         child: const Text('Registrieren')),
                   ),
