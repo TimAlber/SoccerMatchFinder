@@ -21,11 +21,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  Widget? home;
+
   @override
-  Widget build(BuildContext context) {
-
-    Widget? home;
-
+  void initState() {
     FirebaseAuth.instance
         .authStateChanges()
         .listen((User? user) {
@@ -42,6 +42,11 @@ class _MyAppState extends State<MyApp> {
       }
     });
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Find soccer teams to play with',
       theme: ThemeData(
