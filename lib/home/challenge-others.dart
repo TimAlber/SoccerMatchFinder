@@ -52,9 +52,9 @@ class _ChallengeOthersState extends State<ChallengeOthers> {
           return Column(
             children: [
               ListTile(
-                leading: const CircleAvatar(
+                leading: CircleAvatar(
                   backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage('https://www.wacker1921.de/wp-content/uploads/2019/04/1FC_Wacker_1921_Lankwitz_Logo.png'),
+                  backgroundImage: team.linkToPicture.isNotEmpty ? NetworkImage(team.linkToPicture) : null,
                 ),
                 title: Text(team.name),
                 subtitle: Text(team.points.toString()),

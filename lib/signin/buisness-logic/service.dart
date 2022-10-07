@@ -72,13 +72,24 @@ class AuthService {
   Future<Team?> addNewTeam({
     required String name,
     required String pw,
+    required XFile? teamPic,
   }) async {
     try{
+
+      String? teamPicUrl;
+      if(teamPic != null){
+        File file = File(teamPic.path);
+        final storageRef = FirebaseStorage.instance.ref();
+        final newProfilePictureRef = storageRef.child("teams/${const Uuid().v1()}.jpg");
+        await newProfilePictureRef.putFile(file);
+        teamPicUrl = await newProfilePictureRef.getDownloadURL();
+      }
+
       final team = Team(
         name: name,
         pw: pw,
         points: 0,
-        linkToPicture: '',
+        linkToPicture: teamPicUrl ?? '',
       );
 
       final teamsRef = FirebaseFirestore.instance.collection('teams').withConverter<Team>(
