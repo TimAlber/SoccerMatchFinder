@@ -45,6 +45,7 @@ dependencies:
   flutterfire_ui: ^0.4.3+11
   shared_preferences: ^2.0.15
   image_picker: ^0.8.6
+  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:

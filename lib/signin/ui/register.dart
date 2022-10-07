@@ -95,17 +95,15 @@ class _RegisterState extends State<Register> {
                           ),
                         ),
                       ),
+                      if(picture != null)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Visibility(
-                          visible: picture != null,
-                          child: ClipOval(
-                            child: Image.file(
-                              File(picture!.path),
-                              fit: BoxFit.cover,
-                              width: 180.0,
-                              height: 180.0,
-                            ),
+                        child: ClipOval(
+                          child: Image.file(
+                            File(picture!.path),
+                            fit: BoxFit.cover,
+                            width: 180.0,
+                            height: 180.0,
                           ),
                         ),
                       ),
@@ -120,11 +118,7 @@ class _RegisterState extends State<Register> {
                                 minimumSize: MaterialStateProperty.all(
                                     const Size(100, 50))),
                             onPressed: () {
-                              final ImagePicker _picker = ImagePicker();
-                              setState(() async {
-                                picture = await _picker.pickImage(
-                                    source: ImageSource.camera);
-                              });
+                              showModalSheet();
                             },
                             child: picture == null ? Text( 'Profilbild hinzufügen') : Text( 'Profilbild ändern')),
                       ),
@@ -139,15 +133,17 @@ class _RegisterState extends State<Register> {
                                 minimumSize: MaterialStateProperty.all(
                                     const Size(200, 100))),
                             onPressed: () {
-                              setState(() {
-                                isloading = true;
-                              });
                               if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  isloading = true;
+                                });
                                 AuthService()
                                     .register(
                                         email: emailTextController.text,
                                         pw: pwTextController.text,
-                                        username: userNameTextController.text)
+                                        username: userNameTextController.text,
+                                        profilePicture: picture,
+                                )
                                     .then((worked) => {
                                           AuthService()
                                               .signIn(
@@ -159,6 +155,11 @@ class _RegisterState extends State<Register> {
                                                       {
                                                         print(
                                                             'register and login worked'),
+
+                                                        setState(() {
+                                                          isloading = false;
+                                                        }),
+
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
@@ -169,9 +170,6 @@ class _RegisterState extends State<Register> {
                                                   })
                                         });
                               }
-                              setState(() {
-                                isloading = false;
-                              });
                             },
                             child: const Text('Registrieren')),
                       ),
@@ -179,6 +177,46 @@ class _RegisterState extends State<Register> {
               ),
             ))
           : const Center(child: CircularProgressIndicator()),
+    );
+  }
+
+
+  void showModalSheet(){
+    showModalBottomSheet<void>(
+      elevation: 10,
+      context: context,
+      builder: (BuildContext context) {
+        return ListView(
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text('Profilbild mit Kamera machen'),
+                onTap: () {
+                  final ImagePicker _picker = ImagePicker();
+                  _picker.pickImage(source: ImageSource.camera).then((value) => {
+                    setState(() {
+                      picture = value;
+                      Navigator.of(context).pop();
+                    }),
+                  });
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo),
+                title: Text('Profilbild aus Gallery wählen'),
+                onTap: (){
+                  final ImagePicker _picker = ImagePicker();
+                  _picker.pickImage(source: ImageSource.gallery).then((value) => {
+                    setState(() {
+                      picture = value;
+                      Navigator.of(context).pop();
+                    }),
+                  });
+                },
+              )
+            ],
+        );
+      },
     );
   }
 }

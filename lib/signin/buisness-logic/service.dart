@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_finder/models.dart';
+import 'package:uuid/uuid.dart';
 
 class AuthService {
   String? getSignedInUserID(){
@@ -30,7 +35,8 @@ class AuthService {
   Future<bool> register({
     required String email,
     required String pw,
-    required String username
+    required String username,
+    required XFile? profilePicture,
   }) async {
     try {
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -38,6 +44,15 @@ class AuthService {
         password: pw,
       );
       await credential.user?.updateDisplayName(username);
+
+      if(profilePicture != null){
+        File file = File(profilePicture.path);
+        final storageRef = FirebaseStorage.instance.ref();
+        final newProfilePictureRef = storageRef.child("user/${const Uuid().v1()}.jpg");
+        await newProfilePictureRef.putFile(file);
+        await credential.user?.updatePhotoURL(await newProfilePictureRef.getDownloadURL());
+      }
+
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
