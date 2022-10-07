@@ -41,12 +41,10 @@ class _ChooseTeamState extends State<ChooseTeam> {
                 subtitle: Text(team.points.toString()),
                 trailing: const Icon(Icons.arrow_forward),
                 onTap: () async {
-                  final worked = await AuthService().addUserToTeam(userId: AuthService().getSignedInUserID()!, teamId: team.id!);
-                  if(worked){
-                    openHomePage();
-                  } else {
-                    Logger().e('Cant join team');
-                  }
+                  showDialog(
+                    context: context,
+                    builder: (_) => _showPwPopupDialog(context, team),
+                  );
                 },
               ),
               const Divider(),
@@ -134,5 +132,55 @@ class _ChooseTeamState extends State<ChooseTeam> {
           builder: (context) =>
           const HomePage()),
     );
+  }
+
+  Widget _showPwPopupDialog(BuildContext context, Team team) {
+    final pwTextFieldController = TextEditingController();
+    return AlertDialog(
+      title: const Text('Passwort des Teams: '),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+              controller: pwTextFieldController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Passwort',
+              ))
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Abbrechen'),
+        ),
+        TextButton(
+          onPressed: () async {
+            if(pwTextFieldController.text == team.pw){
+              final worked = await AuthService().addUserToTeam(userId: AuthService().getSignedInUserID()!, teamId: team.id!);
+              if(worked){
+                openHomePage();
+              } else {
+                Logger().e('Cant join team');
+              }
+            } else {
+              showErrorAlert(context, "Passwort ist falsch. Probiere es nochmal.");
+            }
+          },
+          child: const Text('Ok'),
+        )
+      ],
+    );
+  }
+
+  void showErrorAlert(BuildContext context, String text) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text(text),
+        ));
   }
 }
