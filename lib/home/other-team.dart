@@ -12,15 +12,33 @@ class OtherTeam extends StatefulWidget {
 }
 
 class _OtherTeamState extends State<OtherTeam> {
-
+  String? myTeamId;
   var _isAlreadyInChallange = false;
+  var _isloading = false;
 
   @override
   void initState() {
+    getIsInChallange();
     super.initState();
   }
 
-  // void getIs
+  void getIsInChallange() async {
+    setState((){
+      _isloading = true;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    myTeamId = prefs.getString('teamId')!;
+
+    AuthService().isInChallange(
+      challanger: myTeamId!,
+      challanged: widget.team.id!,
+    ).then((value) {
+      _isAlreadyInChallange = value;
+      setState((){
+        _isloading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +46,7 @@ class _OtherTeamState extends State<OtherTeam> {
       appBar: AppBar(
         title: Text('${widget.team.name} Herausfordern'),
       ),
-      body: Column(
+      body: !_isloading ? Column(
         children: [
           Center(
             child: Padding(
@@ -53,6 +71,7 @@ class _OtherTeamState extends State<OtherTeam> {
                 ListTile(
                   title: Center(child: Text('Punkte: ${widget.team.points.toString()}')),
                 ),
+                if(!_isAlreadyInChallange)
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -61,11 +80,8 @@ class _OtherTeamState extends State<OtherTeam> {
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))),
                       ),
                       onPressed: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        final myTeamId = prefs.getString('teamId')!;
-
                         AuthService().addChallange(
-                            challanger: myTeamId,
+                            challanger: myTeamId!,
                             challanged: widget.team.id!
                         );
                       },
@@ -75,12 +91,19 @@ class _OtherTeamState extends State<OtherTeam> {
                       ),
                     ),
                   )
+                ),
+                if(_isAlreadyInChallange)
+                Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text('${widget.team.name} wurde berits herausgefordert oder hat dich heraus gefordert.')
+                    )
                 )
               ],
             ),
           )
         ],
-      ),
+      ) : const Center(child: CircularProgressIndicator()),
     );
   }
 }

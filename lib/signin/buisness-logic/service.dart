@@ -10,9 +10,9 @@ import 'package:soccer_finder/models.dart';
 import 'package:uuid/uuid.dart';
 
 class AuthService {
-  String? getSignedInUserID(){
+  String? getSignedInUserID() {
     final user = FirebaseAuth.instance.currentUser;
-    if(user != null){
+    if (user != null) {
       return user.uid;
     } else {
       return null;
@@ -23,8 +23,9 @@ class AuthService {
     required String email,
     required String pw,
   }) async {
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: pw);
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: pw);
       return true;
     } catch (e) {
       Logger().e(e);
@@ -39,18 +40,21 @@ class AuthService {
     required XFile? profilePicture,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: pw,
       );
       await credential.user?.updateDisplayName(username);
 
-      if(profilePicture != null){
+      if (profilePicture != null) {
         File file = File(profilePicture.path);
         final storageRef = FirebaseStorage.instance.ref();
-        final newProfilePictureRef = storageRef.child("user/${const Uuid().v1()}.jpg");
+        final newProfilePictureRef =
+            storageRef.child("user/${const Uuid().v1()}.jpg");
         await newProfilePictureRef.putFile(file);
-        await credential.user?.updatePhotoURL(await newProfilePictureRef.getDownloadURL());
+        await credential.user
+            ?.updatePhotoURL(await newProfilePictureRef.getDownloadURL());
       }
 
       return true;
@@ -74,13 +78,13 @@ class AuthService {
     required String pw,
     required XFile? teamPic,
   }) async {
-    try{
-
+    try {
       String? teamPicUrl;
-      if(teamPic != null){
+      if (teamPic != null) {
         File file = File(teamPic.path);
         final storageRef = FirebaseStorage.instance.ref();
-        final newProfilePictureRef = storageRef.child("teams/${const Uuid().v1()}.jpg");
+        final newProfilePictureRef =
+            storageRef.child("teams/${const Uuid().v1()}.jpg");
         await newProfilePictureRef.putFile(file);
         teamPicUrl = await newProfilePictureRef.getDownloadURL();
       }
@@ -92,10 +96,11 @@ class AuthService {
         linkToPicture: teamPicUrl ?? '',
       );
 
-      final teamsRef = FirebaseFirestore.instance.collection('teams').withConverter<Team>(
-        fromFirestore: (snapshot, _) => Team.fromJson(snapshot.data()!),
-        toFirestore: (team, _) => team.toJson(),
-      );
+      final teamsRef =
+          FirebaseFirestore.instance.collection('teams').withConverter<Team>(
+                fromFirestore: (snapshot, _) => Team.fromJson(snapshot.data()!),
+                toFirestore: (team, _) => team.toJson(),
+              );
 
       final one = await teamsRef.add(team);
       team.id = one.id;
@@ -105,7 +110,7 @@ class AuthService {
       await prefs.setString('teamId', team.id!);
 
       return team;
-    } catch (e){
+    } catch (e) {
       Logger().e(e);
       return null;
     }
@@ -115,11 +120,15 @@ class AuthService {
     required String userId,
     required String teamId,
   }) async {
-    try{
+    try {
       final playersData = {
         "usedID": userId,
       };
-      await FirebaseFirestore.instance.collection('teams').doc(teamId).collection('players').add(playersData);
+      await FirebaseFirestore.instance
+          .collection('teams')
+          .doc(teamId)
+          .collection('players')
+          .add(playersData);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('teamId', teamId);
       return true;
@@ -133,21 +142,50 @@ class AuthService {
     required String challanger,
     required String challanged,
   }) async {
-    try{
+    try {
       final challangeData = {
         "challangerID": challanger,
         "challangedID": challanged,
-        "place" : '',
+        "place": '',
         "status": 'PENDING',
         "output": '',
       };
 
-      final doc = await FirebaseFirestore.instance.collection('challanges').add(challangeData);
+      final doc = await FirebaseFirestore.instance
+          .collection('challanges')
+          .add(challangeData);
       doc.update({'challangeID': doc.id});
       return true;
-    } catch (e){
+    } catch (e) {
       Logger().e(e);
       return false;
     }
+  }
+
+  Future<bool> isInChallange({
+    required String challanger,
+    required String challanged,
+  }) async {
+    final query = await FirebaseFirestore.instance
+        .collection('challanges')
+        .where('challangerID', isEqualTo: challanger)
+        .where('challangedID', isEqualTo: challanged)
+        .where('status', isNotEqualTo: 'DONE')
+        .get();
+
+    final invertQuery = await FirebaseFirestore.instance
+        .collection('challanges')
+        .where('challangerID', isEqualTo: challanged)
+        .where('challangedID', isEqualTo: challanger)
+        .where('status', isNotEqualTo: 'DONE')
+        .get();
+
+    if(query.size != 0){
+      return true;
+    }
+    if(invertQuery.size != 0){
+      return true;
+    }
+    return false;
   }
 }
