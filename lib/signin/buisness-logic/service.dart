@@ -128,4 +128,26 @@ class AuthService {
       return true;
     }
   }
+
+  Future<bool> addChallange({
+    required String challanger,
+    required String challanged,
+  }) async {
+    try{
+      final challangeData = {
+        "challangerID": challanger,
+        "challangedID": challanged,
+        "place" : '',
+        "status": 'PENDING',
+        "output": '',
+      };
+
+      final doc = await FirebaseFirestore.instance.collection('challanges').add(challangeData);
+      doc.update({'challangeID': doc.id});
+      return true;
+    } catch (e){
+      Logger().e(e);
+      return false;
+    }
+  }
 }

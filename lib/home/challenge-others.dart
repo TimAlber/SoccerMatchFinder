@@ -4,6 +4,8 @@ import 'package:flutterfire_ui/firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_finder/models.dart';
 
+import 'other-team.dart';
+
 class ChallengeOthers extends StatefulWidget {
   const ChallengeOthers({Key? key}) : super(key: key);
 
@@ -60,7 +62,10 @@ class _ChallengeOthersState extends State<ChallengeOthers> {
                 subtitle: Text(team.points.toString()),
                 trailing: const Icon(Icons.arrow_forward),
                 onTap: () async {
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OtherTeam(team: team,)),
+                  );
                 },
               ),
               const Divider(),
