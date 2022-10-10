@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:soccer_finder/home/challanged_teams.dart';
+import 'package:soccer_finder/home/other_challanged_tems.dart';
 
 class OpenChallenges extends StatefulWidget {
   const OpenChallenges({Key? key}) : super(key: key);
@@ -16,15 +18,15 @@ class _OpenChallengesState extends State<OpenChallenges> {
         appBar: AppBar(
           title: const TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.home)),
-              Tab(icon: Icon(Icons.favorite)),
+              Tab(icon: Icon(Icons.logout)),
+              Tab(icon: Icon(Icons.login)),
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            //MyHomePage(),
-            //FavoritePage(),
+            ChallangedTeams(),
+            OtherChallangedTeams(),
           ],
         ),
       ),
