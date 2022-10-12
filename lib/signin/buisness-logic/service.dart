@@ -141,12 +141,15 @@ class AuthService {
   Future<bool> addChallange({
     required String challanger,
     required String challanged,
+    required DateTime time,
+    required String place,
   }) async {
     try {
       final challangeData = {
         "challangerID": challanger,
         "challangedID": challanged,
-        "place": '',
+        "time": time,
+        "place": place,
         "status": 'PENDING',
         "output": '',
       };
