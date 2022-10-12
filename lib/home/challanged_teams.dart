@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soccer_finder/home/single-challange.dart';
 import 'package:soccer_finder/models.dart';
 
 class ChallangedTeams extends StatefulWidget {
@@ -81,6 +82,12 @@ class _ChallangedTeamsState extends State<ChallangedTeams> {
                 backgroundColor: Colors.white,
                 backgroundImage: team.linkToPicture.isNotEmpty ? NetworkImage(team.linkToPicture) : null,
               ),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SingleChallange(challangeID: challangeId,)),
+                );
+              },
               title: Text(team.name),
               subtitle: Text(challangeId),
             );
