@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_finder/home/challenge-others.dart';
 import 'package:soccer_finder/home/old-games.dart';
 import 'package:soccer_finder/home/open-challenges.dart';
 import 'package:soccer_finder/home/profile.dart';
+
+import '../signin/ui/choose-team.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,6 +18,31 @@ class _HomePageState extends State<HomePage> {
 
   Widget body = const ChallengeOthers();
   var topic = 'Andere Teams herausfordern';
+
+  @override
+  void initState() {
+    openChooseTeamIfNeeded();
+    super.initState();
+  }
+
+  Future<void> openChooseTeamIfNeeded() async {
+    final prefs = await SharedPreferences.getInstance();
+    if(prefs.getString('teamId') != null){
+      print('All Good');
+    } else {
+      print('Error, no team id found');
+      openChooseTeamPage();
+    }
+  }
+
+  void openChooseTeamPage(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+          const ChooseTeam()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

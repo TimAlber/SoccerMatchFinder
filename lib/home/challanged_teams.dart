@@ -71,7 +71,7 @@ class _ChallangedTeamsState extends State<ChallangedTeams> {
     return Scaffold(
       body: ListView.builder(
           padding: EdgeInsets.zero,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: challangeTeams.length,
           itemBuilder: (context, index) {

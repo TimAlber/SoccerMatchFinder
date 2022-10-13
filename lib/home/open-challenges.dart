@@ -16,6 +16,7 @@ class _OpenChallengesState extends State<OpenChallenges> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const TabBar(
             tabs: [
               Tab(icon: Icon(Icons.logout)),

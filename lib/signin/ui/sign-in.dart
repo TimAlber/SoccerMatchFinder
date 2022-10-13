@@ -77,7 +77,6 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           if(await AuthService().signIn(email: emailTextController.text, pw: pwTextController.text)){
-                            //yay
                           } else {
                             showErrorAlert(context, 'Fehler beim einloggen');
                           }

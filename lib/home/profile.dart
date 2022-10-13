@@ -81,8 +81,8 @@ class _ProfileState extends State<Profile> {
                       foregroundColor: MaterialStateProperty.all(Colors.black),
                       minimumSize:
                       MaterialStateProperty.all(const Size(100, 50))),
-                  onPressed: (){
-
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
                   },
                   child: Text('Logout'),
               ),
