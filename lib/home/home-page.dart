@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:soccer_finder/home/challenge-others.dart';
 import 'package:soccer_finder/home/old-games.dart';
 import 'package:soccer_finder/home/open-challenges.dart';
+import 'package:soccer_finder/home/profile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -63,6 +64,18 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   body = const OldGames();
                   topic = 'Vergangene Spiele ansehen';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profil und Team'),
+              onTap: () {
+                setState(() {
+                  body = const Profile();
+                  topic = 'Profil und Team';
                 });
                 Navigator.pop(context);
               },
