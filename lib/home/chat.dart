@@ -67,23 +67,26 @@ class _ChatState extends State<Chat> {
       ),
       body: !isLoading ? Stack(
         children: <Widget>[
-          FirestoreListView<ChatMessage>(
-            physics: AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            query: chatQuery,
-            itemBuilder: (context, snapshot) {
-              ChatMessage message = snapshot.data();
-              final isFromMyTeam = message.teamId == teamId!;
-              return Column(
-                children: [
-                  ListTile(
-                    title: Text(message.message, textAlign: isFromMyTeam ? TextAlign.right : TextAlign.left),
-                    subtitle: Text(message.userName, textAlign: isFromMyTeam ? TextAlign.right : TextAlign.left),
-                  ),
-                  const Divider(),
-                ],
-              );
-            },
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 150,
+            child: FirestoreListView<ChatMessage>(
+              physics: AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              query: chatQuery,
+              itemBuilder: (context, snapshot) {
+                ChatMessage message = snapshot.data();
+                final isFromMyTeam = message.teamId == teamId!;
+                return Column(
+                  children: [
+                    ListTile(
+                      title: Text(message.message, textAlign: isFromMyTeam ? TextAlign.right : TextAlign.left),
+                      subtitle: Text(message.userName, textAlign: isFromMyTeam ? TextAlign.right : TextAlign.left),
+                    ),
+                    const Divider(),
+                  ],
+                );
+              },
+            ),
           ),
           Align(
             alignment: Alignment.bottomLeft,
