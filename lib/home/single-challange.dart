@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soccer_finder/home/chat.dart';
 import 'package:soccer_finder/models.dart';
 import 'package:intl/intl.dart';
 
@@ -185,21 +186,44 @@ class _SingleChallangeState extends State<SingleChallange> {
                         ),
                       if (status == 'ACCEPTED')
                         Center(
-                          child: TextButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.grey),
-                                foregroundColor:
-                                    MaterialStateProperty.all(Colors.black),
-                                minimumSize: MaterialStateProperty.all(
-                                    const Size(100, 50))),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => _addOutcomeDialog(context, challanger: challanger!, challanged: challanged!),
-                              );
-                            },
-                            child: Text('Ausgang eintragen'),
+                          child: Column(
+                            children: [
+                              TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all(Colors.grey),
+                                    foregroundColor:
+                                        MaterialStateProperty.all(Colors.black),
+                                    minimumSize: MaterialStateProperty.all(
+                                        const Size(100, 50))),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => _addOutcomeDialog(context, challanger: challanger!, challanged: challanged!),
+                                  );
+                                },
+                                child: Text('Ausgang eintragen'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: TextButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                      MaterialStateProperty.all(Colors.grey),
+                                      foregroundColor:
+                                      MaterialStateProperty.all(Colors.black),
+                                      minimumSize: MaterialStateProperty.all(
+                                          const Size(100, 50))),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => Chat(challangeId: widget.challangeID,)),
+                                    );
+                                  },
+                                  child: Text('Chat öffnen'),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       if(status == 'DONE' && output!.isNotEmpty)

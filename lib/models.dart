@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Team {
   Team({
     required this.name,
@@ -29,6 +31,45 @@ class Team {
       'linkToPicture': linkToPicture,
       'pw': pw,
       'id': id,
+    };
+  }
+}
+
+class ChatMessage{
+  ChatMessage({
+    required this.created,
+    required this.message,
+    required this.teamId,
+    required this.teamName,
+    required this.userId,
+    required this.userName
+  });
+
+  final Timestamp created;
+  final String message;
+  final String teamId;
+  final String teamName;
+  final String userId;
+  final String userName;
+
+  ChatMessage.fromJson(Map<String, Object?> json)
+      : this(
+    created: json['created']! as Timestamp,
+    message: json['message']! as String,
+    teamId: json['teamId']! as String,
+    teamName: json['teamName']! as String,
+    userId: json['userId']! as String,
+    userName: json['userName']! as String,
+  );
+
+  Map<String, Object?> toJson() {
+    return {
+      'created': created,
+      'message': message,
+      'teamId': teamId,
+      'teamName': teamName,
+      'userId': userId,
+      'userName': userName,
     };
   }
 }
