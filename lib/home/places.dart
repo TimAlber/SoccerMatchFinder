@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:soccer_finder/home/add_place.dart';
+import 'package:soccer_finder/home/view_place.dart';
 
 import '../models.dart';
 
@@ -36,7 +37,11 @@ class _PlacesState extends State<Places> {
                 subtitle: Text(place.adress),
                 trailing: const Icon(Icons.arrow_forward),
                 onTap: () async {
-                  // Todo: open place read view
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ViewPlace(place: place,)),
+                  );
                 },
               ),
               const Divider(),
