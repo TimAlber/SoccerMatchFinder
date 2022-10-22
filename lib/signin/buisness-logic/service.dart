@@ -191,4 +191,43 @@ class AuthService {
     }
     return false;
   }
+
+  Future<bool> addNewPlace({
+    required String name,
+    required String adress,
+    required XFile placePicture,
+    required double lat,
+    required double lon,
+  }) async {
+
+    try{
+      File file = File(placePicture.path);
+      final storageRef = FirebaseStorage.instance.ref();
+      final newProfilePictureRef =
+      storageRef.child("place/${const Uuid().v1()}.jpg");
+      await newProfilePictureRef.putFile(file);
+      final newPlacePictureUrl = await newProfilePictureRef.getDownloadURL();
+
+      final place = Place(
+        name: name,
+        adress: adress,
+        linkToImage: newPlacePictureUrl,
+        lat: lat,
+        lon: lon,
+      );
+
+      final placeRef =
+      FirebaseFirestore.instance.collection('places').withConverter<Place>(
+        fromFirestore: (snapshot, _) => Place.fromJson(snapshot.data()!),
+        toFirestore: (place, _) => place.toJson(),
+      );
+
+      final one = await placeRef.add(place);
+      place.id = one.id;
+      await placeRef.doc(place.id).set(place);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

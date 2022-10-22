@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_finder/home/challenge-others.dart';
 import 'package:soccer_finder/home/old-games.dart';
 import 'package:soccer_finder/home/open-challenges.dart';
+import 'package:soccer_finder/home/places.dart';
 import 'package:soccer_finder/home/profile.dart';
 
 import '../signin/ui/choose-team.dart';
@@ -80,6 +81,18 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   body = const OpenChallenges();
                   topic = 'Offene Herausforderungen';
+                });
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.sports_soccer),
+              title: const Text('Plätze'),
+              onTap: () {
+                setState(() {
+                  body = const Places();
+                  topic = 'Plätze';
                 });
                 Navigator.pop(context);
               },

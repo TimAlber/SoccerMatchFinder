@@ -73,3 +73,42 @@ class ChatMessage{
     };
   }
 }
+
+class Place{
+  Place({
+    required this.name,
+    required this.adress,
+    required this.linkToImage,
+    required this.lat,
+    required this.lon,
+    this.id
+  });
+
+  final String name;
+  final String adress;
+  final String linkToImage;
+  final double lat;
+  final double lon;
+  String? id;
+
+  Place.fromJson(Map<String, Object?> json)
+      : this(
+    name: json['name']! as String,
+    adress: json['adress']! as String,
+    linkToImage: json['linkToImage']! as String,
+    lat: json['lat']! as double,
+    lon: json['lon']! as double,
+    id: json['id'] != null ? (json['id']! as String) : null,
+  );
+
+  Map<String, Object?> toJson() {
+    return {
+      'name': name,
+      'adress': adress,
+      'linkToImage': linkToImage,
+      'lat': lat,
+      'lon': lon,
+      'id': id,
+    };
+  }
+}
