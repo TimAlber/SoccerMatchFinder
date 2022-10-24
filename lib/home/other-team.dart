@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soccer_finder/home/challange_them.dart';
 import 'package:soccer_finder/models.dart';
 import 'package:soccer_finder/signin/buisness-logic/service.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class OtherTeam extends StatefulWidget {
   final Team team;
@@ -90,9 +90,18 @@ class _OtherTeamState extends State<OtherTeam> {
                                           BorderRadius.circular(30.0))),
                             ),
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => _addChallangeDialog(context),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChallangeThem(
+                                    team: widget.team,
+                                    callback: () {
+                                      setState(() {
+                                        _isAlreadyInChallange = true;
+                                      });
+                                    },
+                                  ),
+                                ),
                               );
                             },
                             child: Padding(
@@ -113,76 +122,6 @@ class _OtherTeamState extends State<OtherTeam> {
               ],
             )
           : const Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  Widget _addChallangeDialog(BuildContext context) {
-    final myAdressController = TextEditingController();
-    DateTime? selectedDate;
-    return AlertDialog(
-      title: const Text('Neue Herausforderung:'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          TextField(
-            controller: myAdressController,
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Adresse',
-                hintText: 'Musterstraße 123'),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: TextButton(
-              style: ButtonStyle(
-                  backgroundColor:
-                  MaterialStateProperty.all(Colors.grey),
-                  foregroundColor:
-                  MaterialStateProperty.all(Colors.black),
-                  minimumSize: MaterialStateProperty.all(
-                      const Size(100, 50))),
-              onPressed: () async {
-                DatePicker.showDateTimePicker(context,
-                    showTitleActions: true,
-                    minTime: DateTime.now(),
-                    maxTime: DateTime(2050),
-                    onConfirm: (date) {
-                      selectedDate = date;
-                    },
-                    locale: LocaleType.de);
-              },
-              child: Text('Wähle ein Termin'),
-            ),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Abbrechen'),
-        ),
-        TextButton(
-          onPressed: () async {
-            if(selectedDate == null || myAdressController.text.isEmpty){
-              return;
-            }
-            AuthService().addChallange(
-              challanger: myTeamId!,
-              challanged: widget.team.id!,
-              time: selectedDate!,
-              place: myAdressController.text,
-            );
-            setState(() {
-              _isAlreadyInChallange = true;
-            });
-            Navigator.of(context).pop();
-          },
-          child: const Text('Ok'),
-        )
-      ],
     );
   }
 }
