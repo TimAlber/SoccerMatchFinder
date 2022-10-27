@@ -69,10 +69,6 @@ class _ChallangeThemState extends State<ChallangeThem> {
                   isExpanded: true,
                   value: firstPlace,
                   icon: const Icon(Icons.sports_soccer),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.blue,
-                  ),
                   onChanged: (Place? value) {
                     setState(() {
                       firstPlace = value!;
@@ -81,7 +77,14 @@ class _ChallangeThemState extends State<ChallangeThem> {
                   items: places!.map<DropdownMenuItem<Place>>((Place value) {
                     return DropdownMenuItem<Place>(
                       value: value,
-                      child: Text(value.name),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(value.linkToImage),
+                        ),
+                        title: Text(value.name),
+                        subtitle: Text(value.adress),
+                      ),
                     );
                   }).toList(),
                 ),

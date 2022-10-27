@@ -20,7 +20,7 @@ class _SingleChallangeState extends State<SingleChallange> {
   var isLoading = false;
   Team? challanger;
   Team? challanged;
-  String? place;
+  Place? place;
   DateTime? time;
   String? output;
 
@@ -49,7 +49,16 @@ class _SingleChallangeState extends State<SingleChallange> {
         .doc(widget.challangeID)
         .get();
 
-    place = challangeDoc.get('place');
+    final placeString = challangeDoc.get('place');
+    final placeRef = FirebaseFirestore.instance
+        .collection("places")
+        .doc(placeString)
+        .withConverter<Place>(
+      fromFirestore: (snapshot, _) => Place.fromJson(snapshot.data()!),
+      toFirestore: (place, _) => place.toJson(),
+    );
+    place = await placeRef.get().then((snapshot) => snapshot.data()!);
+
     time = challangeDoc.get('time').toDate();
     status = challangeDoc.get('status');
     output = challangeDoc.get('output');
@@ -126,9 +135,25 @@ class _SingleChallangeState extends State<SingleChallange> {
                         subtitle: Center(
                             child: Text('Punkte: ${challanged!.points}')),
                       ),
-                      ListTile(
-                        title: Center(child: Text("Ort:")),
-                        subtitle: Center(child: Text(place!)),
+                      Center(child: Text("Platz:", style: TextStyle(fontSize: 32),)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.white,
+                            backgroundImage: NetworkImage(place!.linkToImage),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 25),
+                            child: Column(
+                              children: [
+                                Center(child: Text(place!.name, style: TextStyle(fontSize: 26))),
+                                Center(child: Text(place!.adress, style: TextStyle(fontSize: 26)))
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                       ListTile(
                         title: Center(child: Text("Zeitpunkt:")),
