@@ -112,7 +112,7 @@ class _ProfileState extends State<Profile> {
                 onPressed: (){
 
                 },
-                child: Text('Team wechslen'),
+                child: Text('Team wechseln'),
               ),
             ),
           ],

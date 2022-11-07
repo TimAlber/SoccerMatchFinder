@@ -69,29 +69,41 @@ class _ChallangedTeamsState extends State<ChallangedTeams> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
-      body: ListView.builder(
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: challangeTeams.length,
-          itemBuilder: (context, index) {
-            var team = challangeTeams[index];
-            var challangeId = challangeID[index];
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: team.linkToPicture.isNotEmpty ? NetworkImage(team.linkToPicture) : null,
-              ),
-              onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SingleChallange(challangeID: challangeId,)),
+      body: Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            child: const Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Text("Teams die dein Team herausgefordert hat.", textAlign: TextAlign.center,),
+            )
+          ),
+          ListView.builder(
+              padding: EdgeInsets.zero,
+              physics: const AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: challangeTeams.length,
+              itemBuilder: (context, index) {
+                var team = challangeTeams[index];
+                var challangeId = challangeID[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: team.linkToPicture.isNotEmpty ? NetworkImage(team.linkToPicture) : null,
+                  ),
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SingleChallange(challangeID: challangeId,)),
+                    );
+                  },
+                  title: Text(team.name),
+                  subtitle: Text(challangeId),
                 );
-              },
-              title: Text(team.name),
-              subtitle: Text(challangeId),
-            );
-          }
+              }
+          ),
+        ],
       )
     );
   }
