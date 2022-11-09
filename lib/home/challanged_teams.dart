@@ -79,6 +79,7 @@ class _ChallangedTeamsState extends State<ChallangedTeams> {
               child: Text("Teams die dein Team herausgefordert hat.", textAlign: TextAlign.center,),
             )
           ),
+          const Divider(),
           ListView.builder(
               padding: EdgeInsets.zero,
               physics: const AlwaysScrollableScrollPhysics(),
