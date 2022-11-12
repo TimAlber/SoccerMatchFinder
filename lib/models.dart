@@ -112,3 +112,46 @@ class Place{
     };
   }
 }
+
+class Challange {
+  Challange({
+    required this.challangeID,
+    required this.challangedID,
+    required this.challangerID,
+    required this.output,
+    required this.place,
+    required this.status,
+    required this.time
+  });
+
+  Challange.fromJson(Map<String, Object?> json)
+      : this(
+    challangeID: json['challangeID']! as String,
+    challangedID: json['challangedID']! as String,
+    challangerID: json['challangerID']! as String,
+    output: json['output']! as String,
+    place: json['place']! as String,
+    status: json['status']! as String,
+    time: json['time']! as Timestamp,
+  );
+
+  final String challangeID;
+  final String challangedID;
+  final String challangerID;
+  final String output;
+  final String place;
+  final String status;
+  final Timestamp time;
+
+  Map<String, Object?> toJson() {
+    return {
+      'challangeID': challangeID,
+      'challangedID': challangedID,
+      'challangerID': challangerID,
+      'output': output,
+      'place': place,
+      'status': status,
+      'time': time,
+    };
+  }
+}
