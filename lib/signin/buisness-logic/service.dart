@@ -26,6 +26,17 @@ class AuthService {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: pw);
+
+      final ref = await FirebaseFirestore.instance
+      .collection('players')
+      .doc(getSignedInUserID())
+      .get();
+
+      var data = ref.data() as Map<String, dynamic>;
+      final teamID = data['teamID'];
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('teamId', teamID);
       return true;
     } catch (e) {
       Logger().e(e);
@@ -129,6 +140,15 @@ class AuthService {
           .doc(teamId)
           .collection('players')
           .add(playersData);
+
+      final teamData = {
+        "teamID": teamId,
+      };
+      await FirebaseFirestore.instance
+          .collection('players')
+          .doc(userId)
+          .set(teamData);
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('teamId', teamId);
       return true;
