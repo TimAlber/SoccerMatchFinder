@@ -1,10 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/firestore.dart';
-import 'package:soccer_finder/home/add_place.dart';
-import 'package:soccer_finder/home/view_place.dart';
-
-import '../models.dart';
+import 'package:soccer_finder/home/places_list.dart';
+import 'package:soccer_finder/home/places_map.dart';
 
 class Places extends StatefulWidget {
   const Places({Key? key}) : super(key: key);
@@ -16,50 +12,24 @@ class Places extends StatefulWidget {
 class _PlacesState extends State<Places> {
   @override
   Widget build(BuildContext context) {
-    final placesQuery = FirebaseFirestore.instance.collection('places').withConverter<Place>(
-      fromFirestore: (snapshot, _) => Place.fromJson(snapshot.data()!),
-      toFirestore: (place, _) => place.toJson(),
-    );
-
-    return Scaffold(
-      body: FirestoreListView<Place>(
-        query: placesQuery,
-        itemBuilder: (context, snapshot) {
-          Place place = snapshot.data();
-          return Column(
-            children: [
-              ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: place.linkToImage.isNotEmpty ? NetworkImage(place.linkToImage) : null,
-                ),
-                title: Text(place.name),
-                subtitle: Text(place.adress),
-                trailing: const Icon(Icons.arrow_forward),
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ViewPlace(place: place,)),
-                  );
-                },
-              ),
-              const Divider(),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.list)),
+              Tab(icon: Icon(Icons.map)),
             ],
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                const AddPlace()),
-          );
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            PlacesList(),
+            PlacesMap(),
+          ],
+        ),
       ),
     );
   }
